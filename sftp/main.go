@@ -7,7 +7,7 @@ import (
 	"regexp"
 	"time"
 
-	"github.com/patricknjenga/simplify/ssh"
+	"github.com/patricknjenga/util/ssh"
 	"github.com/pkg/sftp"
 )
 

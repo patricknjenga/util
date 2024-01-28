@@ -1,4 +1,4 @@
-module github.com/patricknjenga/simplify
+module github.com/patricknjenga/util
 
 go 1.21
 
