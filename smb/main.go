@@ -21,8 +21,8 @@ type Smb struct {
 	User      string
 }
 
-func New(address string, directory string, mount string, password string, port string, user string) *Smb {
-	return &Smb{address, directory, mount, password, port, &smb2.Session{}, &smb2.Share{}, user}
+func New(address string, directory string, mount string, password string, port string, user string) Smb {
+	return Smb{address, directory, mount, password, port, &smb2.Session{}, &smb2.Share{}, user}
 }
 
 func (s *Smb) Dial() error {
@@ -43,7 +43,7 @@ func (s *Smb) Dial() error {
 	return err
 }
 
-func (s *Smb) Get(p string) ([]byte, error) {
+func (s Smb) Get(p string) ([]byte, error) {
 	reader, err := s.Share.Open(fmt.Sprintf("%s/%s", s.Directory, p))
 	if err != nil {
 		return []byte{}, err
@@ -51,7 +51,7 @@ func (s *Smb) Get(p string) ([]byte, error) {
 	return io.ReadAll(reader)
 }
 
-func (s *Smb) Ls(r string) ([]os.FileInfo, error) {
+func (s Smb) Ls(r string) ([]os.FileInfo, error) {
 	var result []os.FileInfo
 	regexp, err := regexp.Compile(r)
 	if err != nil {
@@ -69,11 +69,11 @@ func (s *Smb) Ls(r string) ([]os.FileInfo, error) {
 	return result, err
 }
 
-func (s *Smb) Mkdir(d string) error {
+func (s Smb) Mkdir(d string) error {
 	return s.Share.MkdirAll(fmt.Sprintf("%s/%s", s.Directory, d), 0777)
 }
 
-func (s *Smb) Put(path string, data []byte) (int, error) {
+func (s Smb) Put(path string, data []byte) (int, error) {
 	writer, err := s.Share.Create(fmt.Sprintf("%s/%s", s.Directory, path))
 	if err != nil {
 		return 0, err

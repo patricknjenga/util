@@ -17,8 +17,8 @@ type Ssh struct {
 	User       string
 }
 
-func New(address string, password string, port string, privateKey []byte, timeout time.Duration, user string) *Ssh {
-	return &Ssh{address, &ssh.Client{}, password, port, privateKey, timeout, user}
+func New(address string, password string, port string, privateKey []byte, timeout time.Duration, user string) Ssh {
+	return Ssh{address, &ssh.Client{}, password, port, privateKey, timeout, user}
 }
 
 func (s *Ssh) Dial() error {
@@ -51,7 +51,7 @@ func (s *Ssh) Dial() error {
 	return err
 }
 
-func (s *Ssh) Exec(command string) ([]byte, error) {
+func (s Ssh) Exec(command string) ([]byte, error) {
 	session, err := s.Client.NewSession()
 	if err != nil {
 		return []byte{}, nil

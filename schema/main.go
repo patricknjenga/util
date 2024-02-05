@@ -4,9 +4,9 @@ import (
 	"reflect"
 )
 
-func New(s ...any) map[string]map[string]any {
+func New(structs ...any) map[string]map[string]any {
 	r := map[string]map[string]any{}
-	for _, v := range s {
+	for _, v := range structs {
 		var (
 			f = map[string]any{}
 			t = reflect.TypeOf(v)

@@ -14,11 +14,11 @@ type Smtp struct {
 	User string
 }
 
-func New(host string, pass string, port string, user string) *Smtp {
-	return &Smtp{host, pass, port, user}
+func New(host string, pass string, port string, user string) Smtp {
+	return Smtp{host, pass, port, user}
 }
 
-func (s *Smtp) Send(attach []string, body string, contentType string, embed []string, from []string, subject []string, to []string) error {
+func (s Smtp) Send(attach []string, body string, contentType string, embed []string, from []string, subject []string, to []string) error {
 	port, err := strconv.Atoi(s.Port)
 	if err != nil {
 		return err

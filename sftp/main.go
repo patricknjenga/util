@@ -17,8 +17,8 @@ type Sftp struct {
 	Ssh       ssh.Ssh
 }
 
-func New(address string, password string, port string, privateKey []byte, timeout time.Duration, user string, directory string) *Sftp {
-	return &Sftp{&sftp.Client{}, directory, *ssh.New(address, password, port, privateKey, timeout, user)}
+func New(address string, password string, port string, privateKey []byte, timeout time.Duration, user string, directory string) Sftp {
+	return Sftp{&sftp.Client{}, directory, ssh.New(address, password, port, privateKey, timeout, user)}
 }
 
 func (s *Sftp) Dial() error {
@@ -30,7 +30,7 @@ func (s *Sftp) Dial() error {
 	return err
 }
 
-func (s *Sftp) Get(p string) ([]byte, error) {
+func (s Sftp) Get(p string) ([]byte, error) {
 	reader, err := s.Client.Open(fmt.Sprintf("%s/%s", s.Directory, p))
 	if err != nil {
 		return []byte{}, err
@@ -38,7 +38,7 @@ func (s *Sftp) Get(p string) ([]byte, error) {
 	return io.ReadAll(reader)
 }
 
-func (s *Sftp) Ls(r string) ([]os.FileInfo, error) {
+func (s Sftp) Ls(r string) ([]os.FileInfo, error) {
 	var result []os.FileInfo
 	regexp, err := regexp.Compile(r)
 	if err != nil {
@@ -56,11 +56,11 @@ func (s *Sftp) Ls(r string) ([]os.FileInfo, error) {
 	return result, err
 }
 
-func (s *Sftp) Mkdir(d string) error {
+func (s Sftp) Mkdir(d string) error {
 	return s.Client.MkdirAll(fmt.Sprintf("%s/%s", s.Directory, d))
 }
 
-func (s *Sftp) Put(p string, data []byte) (int, error) {
+func (s Sftp) Put(p string, data []byte) (int, error) {
 	writer, err := s.Client.Create(fmt.Sprintf("%s/%s", s.Directory, p))
 	if err != nil {
 		return 0, err
