@@ -22,7 +22,7 @@ func New(db *gorm.DB) Scheduler {
 	return Scheduler{db}
 }
 
-func (s *Scheduler) Do(c context.Context, t *Task, f func() error) {
+func (s Scheduler) Do(c context.Context, t *Task, f func() error) {
 	s.DB.WithContext(c).Create(t)
 	defer func() {
 		t.Duration = time.Since(t.CreatedAt).Truncate(time.Second).String()
